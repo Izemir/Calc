@@ -10,7 +10,7 @@ namespace Calc
     {
 
 
-        public static string input="112dd33";
+        public static string input="112/33";
 
         static char[] parsing;
 
