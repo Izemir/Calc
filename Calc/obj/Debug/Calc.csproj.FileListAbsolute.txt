@@ -5,3 +5,10 @@ C:\Users\Izemir\Desktop\C# Projects\Calc\Calc\obj\Debug\Calc.csprojAssemblyRefer
 C:\Users\Izemir\Desktop\C# Projects\Calc\Calc\obj\Debug\Calc.csproj.CoreCompileInputs.cache
 C:\Users\Izemir\Desktop\C# Projects\Calc\Calc\obj\Debug\Calc.exe
 C:\Users\Izemir\Desktop\C# Projects\Calc\Calc\obj\Debug\Calc.pdb
+C:\Users\PC21\Desktop\Бро\Calc\bin\Debug\Calc.exe.config
+C:\Users\PC21\Desktop\Бро\Calc\bin\Debug\Calc.exe
+C:\Users\PC21\Desktop\Бро\Calc\bin\Debug\Calc.pdb
+C:\Users\PC21\Desktop\Бро\Calc\obj\Debug\Calc.csprojAssemblyReference.cache
+C:\Users\PC21\Desktop\Бро\Calc\obj\Debug\Calc.csproj.CoreCompileInputs.cache
+C:\Users\PC21\Desktop\Бро\Calc\obj\Debug\Calc.exe
+C:\Users\PC21\Desktop\Бро\Calc\obj\Debug\Calc.pdb
