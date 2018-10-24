@@ -10,33 +10,82 @@ namespace Calc
     {
 
 
-<<<<<<< HEAD
-        public static string input="112.4 / 17.1";
-=======
+
+       
+
         public static string input="112/33";
->>>>>>> 06744f50f9e6bb16f069fe98b36832511bab5ca1
+
 
         static char[] parsing;
 
         static string answer = "@";
 
+        static int errorNumber = 0;
+
 
         static void Main(string[] args)
         {
 
-            Calculate();
+            
+
+            //Testing();
+
+            Parsing();
 
             Console.WriteLine(answer);
             Console.ReadKey();
         }
 
+        private static void Parsing()
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void Testing()
+        {
+            List<char> datalist = new List<char>();
+            datalist.AddRange(input);
+
+            //TestForBrackets(datalist);
+
+            //TestForErrors(datalist);
+        }
+
+        private static void TestForErrors(List<char> datalist)
+        {
+           /*
+           
+            проверяем /0 или / 0
+            проверяем на числа
+            и в том же цикле проверяем на +-.. и ( и .
+            
+            как то встроить проверку на числа подряд и знаки подряд(и исключение унарный минус)
 
 
-        
+            */
+        }
 
-        
+        private static void TestForBrackets(List<char> datalist)
+        {
+            
 
-        
+            List<char> brackets = new List<char>();
+
+            /*
+             * 
+             * Идем циклом через выражение, сохраняем индекс ( в стек
+             * встречаем ) и меняем ( и ) на нули
+             * и удаляем индекс ( из стека
+             * 
+             * изначально индекс -1
+             * 
+             * считаем кол-во ( и )
+             * 
+             */
+           
+
+
+        }
 
         public static void Calculate()
         {
