@@ -13,7 +13,7 @@ namespace Calc
 
        
 
-        public static string input="112/33";
+        public static string input= "85 / 10 – 4 * (10 - 55)";
 
 
         static char[] parsing;
@@ -26,19 +26,91 @@ namespace Calc
         static void Main(string[] args)
         {
 
-            
+
 
             //Testing();
 
-            Parsing();
+            List<string>  a = Parsing();
+
+            for (int i = 0; i < a.Count; i++)
+            {
+                Console.WriteLine(i + " - " + a[i]);
+            }
+
+            answer = Calculate2(a);
 
             Console.WriteLine(answer);
             Console.ReadKey();
         }
 
-        private static void Parsing()
+        private static string Calculate2(List<string> a)
         {
-            throw new NotImplementedException();
+            Stack<string> stack = new Stack<string>();
+
+
+        }
+
+
+        //ДОБАВИТЬ ТОЧКУ
+        private static List<string> Parsing()
+        {
+
+            List<char> datalist = new List<char>();
+            datalist.AddRange(input);
+
+            List<string> result = new List<string>();
+
+            bool readingNumber = false;
+
+            List<char> number = new List<char>();
+
+            for (int i = 0; i < datalist.Count; i++)
+            {
+
+                if (datalist[i] == ' ') continue;
+
+                if (char.IsDigit(datalist[i]))
+                {
+                    
+                    if (!readingNumber)
+                    {
+                        readingNumber = true;
+                        number.Add(datalist[i]);
+                    }
+                    else
+                    {
+                        number.Add(datalist[i]);
+                    }
+
+                    if(i+1== datalist.Count)
+                    {
+                        result.Add(new string(number.ToArray()));
+                        number.Clear();
+                        readingNumber = false;
+                    }
+
+
+                }
+                else
+                {
+                    if (!readingNumber)
+                    {
+                        result.Add(datalist[i].ToString());
+                    }
+                    else
+                    {
+
+                        result.Add(new string(number.ToArray()));
+                        number.Clear();
+                        readingNumber = false;
+                        result.Add(datalist[i].ToString());
+                    }
+
+                }
+            }
+
+
+            return result;
         }
 
         private static void Testing()
