@@ -20,19 +20,35 @@ namespace Calc
         static void Main(string[] args)
         {
 
-            Calculate();
+            //Calculate();
+
+            Parsing();
 
             Console.WriteLine(answer);
             Console.ReadKey();
         }
 
 
+        public static void Parsing()
+        {
+            
+            List<char> datalist = new List<char>();
+            datalist.AddRange(input);
 
-        
+            TestForBrackets(datalist);
 
-        
+            TestForErrors(datalist);
+        }
 
-        
+        private static void TestForErrors(List<char> datalist)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void TestForBrackets(List<char> datalist)
+        {
+            throw new NotImplementedException();
+        }
 
         public static void Calculate()
         {
