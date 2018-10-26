@@ -8,15 +8,8 @@ namespace Calc
 {
     class Program
     {
-
-
-
-       
-
+        
         public static string input= "85 / 10 – 4 * (10 - 55)";
-
-
-        static char[] parsing;
 
         static string answer = "@";
 
@@ -25,108 +18,27 @@ namespace Calc
 
         static void Main(string[] args)
         {
-
-
-
-
+            
             //Testing();
 
-            List<string>  a = Parsing();
+            List<object>  a = Parsing();
 
+            /*
             for (int i = 0; i < a.Count; i++)
             {
-                Console.WriteLine(i+1 + " - " + a[i]);
+                Console.Write(a[i]);
             }
+            */
+            
+            
 
-            answer = Calculate2(a);
+            answer = Calculate(a);
 
 
             Console.WriteLine(answer);
             Console.ReadKey();
         }
 
-        private static string Calculate2(List<string> a)
-        {
-            string result="";
-
-            Stack<string> stack = new Stack<string>();
-            List<string> tmp = new List<string>();
-
-            for(int i = 0; i < a.Count; i++)
-            {
-                int res;
-                bool isInt = Int32.TryParse(a[i], out res);
-
-
-
-            }
-
-
-            return result;
-        }
-
-
-        //ДОБАВИТЬ ТОЧКУ
-        private static List<string> Parsing()
-        {
-
-            List<char> datalist = new List<char>();
-            datalist.AddRange(input);
-
-            List<string> result = new List<string>();
-
-            bool readingNumber = false;
-
-            List<char> number = new List<char>();
-
-            for (int i = 0; i < datalist.Count; i++)
-            {
-
-                if (datalist[i] == ' ') continue;
-
-                if (char.IsDigit(datalist[i]))
-                {
-                    
-                    if (!readingNumber)
-                    {
-                        readingNumber = true;
-                        number.Add(datalist[i]);
-                    }
-                    else
-                    {
-                        number.Add(datalist[i]);
-                    }
-
-                    if(i+1== datalist.Count)
-                    {
-                        result.Add(new string(number.ToArray()));
-                        number.Clear();
-                        readingNumber = false;
-                    }
-
-
-                }
-                else
-                {
-                    if (!readingNumber)
-                    {
-                        result.Add(datalist[i].ToString());
-                    }
-                    else
-                    {
-
-                        result.Add(new string(number.ToArray()));
-                        number.Clear();
-                        readingNumber = false;
-                        result.Add(datalist[i].ToString());
-                    }
-
-                }
-            }
-
-
-            return result;
-        }
 
         private static void Testing()
         {
@@ -138,45 +50,50 @@ namespace Calc
             //TestForErrors(datalist);
         }
 
-        private static void TestForErrors(List<char> datalist)
+        private static string TestForErrors(List<char> datalist)
         {
-           /*
-           
-            проверяем /0 или / 0
-            проверяем на числа
-            и в том же цикле проверяем на +-.. и ( и .
-            
-            как то встроить проверку на числа подряд и знаки подряд(и исключение унарный минус)
+            /*
 
-        public static void Parsing()
-        {
-            
-            List<char> datalist = new List<char>();
-            datalist.AddRange(input);
+             проверяем /0 или / 0
+             проверяем на числа
+             и в том же цикле проверяем на +-.. и ( и .
 
-<<<<<<< HEAD
-            TestForBrackets(datalist);
+             как то встроить проверку на числа подряд и знаки подряд(и исключение унарный минус)
 
-            TestForErrors(datalist);
-        }
+             */
 
-        private static void TestForErrors(List<char> datalist)
-        {
-            throw new NotImplementedException();
+            for (int i = 0; i < datalist.Count; i++)
+            {
+                char c = datalist[i];
+                if (c != ' ' && c != '(' && c != ')' && char.IsDigit(c) && c!='+' && c!='-' && c!= '–' && c!= '*' && c != '/' && c != '.')
+                {
+                    
+                    return "Ошибка: " + c.ToString() + " на позиции " + i;
+                }
+            }
+
+
+            Dictionary<int, char> tmpMap = new Dictionary<int, char>();
+
+            for(int i=0;i<datalist.Count;i++)
+            {
+                char c = datalist[i];
+
+                if (c != ' ' && c != '(' && c != ')') tmpMap.Add(i, c);
+            }
+
+
+
+            return "Pass";
         }
 
         private static void TestForBrackets(List<char> datalist)
         {
-            throw new NotImplementedException();
-=======
-            */
-        }
 
-        private static void TestForBrackets(List<char> datalist)
-        {
-            
 
             List<char> brackets = new List<char>();
+
+
 
             /*
              * 
@@ -189,146 +106,262 @@ namespace Calc
              * считаем кол-во ( и )
              * 
              */
-           
+
 
 
 
         }
 
-        public static void Calculate()
+        private static List<object> Parsing()
         {
-            // массив из инпута
-            parsing = input.ToCharArray();
 
-            //List<string> datalist = new List<string>();
-            //datalist.AddRange(input.Select(c => c.ToString()));
-
-            //лист из инпута
             List<char> datalist = new List<char>();
-            datalist.AddRange(input);
+            List<char> tmp = new List<char>();
+            tmp.AddRange(input);
 
 
-
-            answer = ParseAndCalc(datalist);
-            //answer.text = datalist.Count.ToString();
-            //answer.text = ParseAndCalc(parsing);
-        }
-
-        public static string ParseAndCalc(List<char> toParse)
-        {
-            //List<char> result = new List<char>();
-
-            //string b = "@!";
-
-            char operation = '\0';
-            List<char> first = new List<char>();
-            List<char> second = new List<char>();
-
-            while (toParse.Count > 0 && operation!='e')
+            foreach (char c in tmp)
             {
-                
+                if (c != ' ') datalist.Add(c);
+            }
 
-                if (char.IsDigit(toParse[0])||toParse[0]=='.')
+            List<object> result = new List<object>();
+
+            bool readingNumber = false;
+
+            List<char> number = new List<char>();
+
+            for (int i = 0; i < datalist.Count; i++)
+            {
+
+                //if (datalist[i] == ' ') continue;
+
+                if (char.IsDigit(datalist[i]))
                 {
-                    if (operation == '\0')
+
+                    if (!readingNumber)
                     {
-                        first.Add(toParse[0]);
-                        toParse.RemoveAt(0);
+                        readingNumber = true;
+                        number.Add(datalist[i]);
                     }
                     else
                     {
-                        if (operation != 'e')
+                        number.Add(datalist[i]);
+                    }
+
+                    if (i + 1 == datalist.Count)
+                    {
+                        result.Add(Convert.ToDouble(new string(number.ToArray()), System.Globalization.CultureInfo.InvariantCulture));
+                        number.Clear();
+                        readingNumber = false;
+                    }
+
+
+                }
+                else
+                {
+                    if (!readingNumber)
+                    {
+                        result.Add(datalist[i].ToString());
+                    }
+                    else
+                    {
+                        if (datalist[i] == '.')
                         {
-                            second.Add(toParse[0]);
-                            toParse.RemoveAt(0);
+                            number.Add(datalist[i]);
+                        }
+                        else
+                        {
+                            result.Add(Convert.ToDouble(new string(number.ToArray()), System.Globalization.CultureInfo.InvariantCulture));
+                            number.Clear();
+                            readingNumber = false;
+                            result.Add(datalist[i].ToString());
                         }
                     }
+
+                }
+            }
+
+
+            return result;
+        }
+
+
+        //
+        //
+        //
+        //использовать queue
+        //
+        private static string Calculate(List<object> a)
+        {
+            string result="";
+
+            Stack<object> stack = new Stack<object>();
+            List<object> tmpList = new List<object>();
+
+            bool doubleBefore = false;
+
+            for(int i = 0; i < a.Count; i++)
+            {
+                var temp = a[i];
+                if (temp.GetType() == typeof(double))
+                {
+                    tmpList.Add(temp);
+                    doubleBefore = true;
+                }
+                else if (string.Equals(temp, "("))
+                {
+                    stack.Push(temp);
+                    doubleBefore = false;
+                }
+                else if (string.Equals(temp, ")"))
+                {
+
+                    while (stack.Count > 0)
+                    {
+                        if (!string.Equals(stack.Peek(), "("))
+                        {
+                            tmpList.Add(stack.Pop());
+                        }
+                        else
+                        {
+                            stack.Pop();
+                            break;
+                        }
+                    }
+                    doubleBefore = false;
+                }
+                else if((string.Equals(temp, "-") || string.Equals(temp, "–")) && !doubleBefore)
+                {
+                    temp = "$";
+                    stack.Push(temp);
+                    
+                    doubleBefore = false;
+
+                }
+                else if (string.Equals(temp, "+") || string.Equals(temp, "-") || string.Equals(temp, "–"))
+                {
+                    
+                    if (stack.Count == 0) stack.Push(temp);
+                    else
+                    {
+                        while (stack.Count > 0)
+                        {
+                            var temp2 = stack.Peek();
+
+                            if (string.Equals(temp2, "+") || string.Equals(temp2, "-") || string.Equals(temp, "–") || string.Equals(temp2, "*") || string.Equals(temp2, "/"))
+                            {
+                                tmpList.Add(stack.Pop());
+                                if (stack.Count == 0)
+                                {
+                                    stack.Push(temp);
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                stack.Push(temp);
+                                break;
+                            }
+                            
+                        }
+                    }
+                    doubleBefore = false;
+                }
+                else if (string.Equals(temp, "*") || string.Equals(temp, "/"))
+                {
+                    if (stack.Count == 0) stack.Push(temp);
+                    else
+                    {
+                        while (stack.Count > 0)
+                        {
+                            var temp2 = stack.Peek();
+
+                            if (string.Equals(temp2, "*") || string.Equals(temp2, "/"))
+                            {
+                                tmpList.Add(stack.Pop());
+                                if (stack.Count == 0)
+                                {
+                                    stack.Push(temp);
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                stack.Push(temp);
+                                break;
+                            }
+                            
+                        }
+                    }
+                    doubleBefore = false;
+                }
+
+
+
+            }
+
+            while (stack.Count > 0)
+            {
+                tmpList.Add(stack.Pop());
+            }
+
+
+
+            foreach (var temp in tmpList)
+            {
+                if (temp.GetType() == typeof(double))
+                {
+                    stack.Push(temp);
                     
                 }
                 else
                 {
-                    if ((toParse[0] == '+') || (toParse[0] == '-') || (toParse[0] == '*') || (toParse[0] == '/'))
-                    {
-                        operation = toParse[0];
-                        toParse.RemoveAt(0);
+                    if (string.Equals(temp, "$")) {
+                        
+                        double second = Convert.ToDouble(stack.Pop());
+                        stack.Push(-1 * second);
                     }
-                    else if(toParse[0] == ' ')
-                    {
-                        toParse.RemoveAt(0);
-                    }
-                    else
-                    {
-                        operation = 'e'; break;
-                    }
-                }
+                    else {
+
+                        double second = Convert.ToDouble(stack.Pop());
+                        double first = Convert.ToDouble(stack.Pop());
+
+                        double res = 0;
+
+                        switch (temp)
+                        {
+                            case "+":
+                                res = first + second;
+                                break;
+                            case "-":
+                                res = first - second;
+                                break;
+                            case "–":
+                                res = first - second;
+                                break;
+                            case "*":
+                                res = first * second;
+                                break;
+                            case "/":
+                                res = first / second;
+                                break;
 
 
+                        }
 
-            }
-
-            if (operation == 'e') return "Error";
-            else return Calculator(first, second, operation);
-
-
-
-            /*
-            for (int i = 0; i < toParse.Count; i++)
-            {
-                if (toParse.Count != 0)
-                {
-                    if (char.IsDigit(toParse[i]))
-                    {
-                        result.Add(toParse[i]);
-                        toParse.RemoveAt(i);
-                        i--;
-                    }
-                    else
-                    {
-
-                        toParse.RemoveAt(i);
-                        b = ParseAndCalc(toParse);
-                        break;
+                        stack.Push(res);
                     }
                 }
 
-
             }
 
 
-            string a = new string(result.ToArray());
-            //b = new string(toParse.ToArray());
-            */
 
-            //return "S:" + a + ";Con:" + b;
+            return Convert.ToDouble(stack.Pop()).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture); 
         }
 
-        private static string Calculator(List<char> first, List<char> second, char operation)
-        {
-                       
-            double a = Convert.ToDouble(new string (first.ToArray()), System.Globalization.CultureInfo.InvariantCulture);
-            double b = Convert.ToDouble(new string(second.ToArray()), System.Globalization.CultureInfo.InvariantCulture);
-
-            double res=0.0;
-
-            switch (operation)
-            {
-                case '+':
-                    res = a + b;
-                    break;
-                case '-':
-                    res = a - b;
-                    break;
-                case '*':
-                    res = a * b;
-                    break;
-                case '/':
-                    res = a / b;
-                    break;
-
-            }
-
-            return res.ToString("0.000000", System.Globalization.CultureInfo.InvariantCulture); ;
-        }
+        
 
         public static bool IsCharDigit(char c)
         {
