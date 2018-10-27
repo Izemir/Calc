@@ -9,45 +9,65 @@ namespace Calc
     class Program
     {
         
-        public static string input= "85 / 10 – 4 * (10 - 55)";
+        public static string input= "((10 - 15) / 5 + 3) - 1 ";
 
         static string answer = "@";
 
-        static int errorNumber = 0;
+        static bool error = false;
+
+        static string errorMessage = "";
 
 
         static void Main(string[] args)
         {
+
             
-            //Testing();
 
-            List<object>  a = Parsing();
+            string errorMessage = Testing();
 
-            /*
-            for (int i = 0; i < a.Count; i++)
+            if (error)
             {
-                Console.Write(a[i]);
+                Console.WriteLine(errorMessage);
+                Console.ReadKey();
             }
-            */
+            else
+            {
+
+
+                List<object> a = Parsing();
+
+                /*
+                for (int i = 0; i < a.Count; i++)
+                {
+                    Console.Write(a[i]);
+                }
+                */
+
+
+                answer = Calculate(a);
+
+
+                Console.WriteLine(answer);
+                Console.ReadKey();
+
+            }
+
             
-            
-
-            answer = Calculate(a);
-
-
-            Console.WriteLine(answer);
-            Console.ReadKey();
         }
 
 
-        private static void Testing()
+        private static string Testing()
         {
             List<char> datalist = new List<char>();
             datalist.AddRange(input);
 
-            //TestForBrackets(datalist);
+            string result;
 
-            //TestForErrors(datalist);
+            result = TestForBrackets(datalist);
+
+            if(!error) result = TestForErrors(datalist);
+
+            return result;
         }
 
         private static string TestForErrors(List<char> datalist)
@@ -60,41 +80,130 @@ namespace Calc
 
              как то встроить проверку на числа подряд и знаки подряд(и исключение унарный минус)
 
+             проверка . на числа вокруг
              */
 
             for (int i = 0; i < datalist.Count; i++)
             {
                 char c = datalist[i];
-                if (c != ' ' && c != '(' && c != ')' && char.IsDigit(c) && c!='+' && c!='-' && c!= '–' && c!= '*' && c != '/' && c != '.')
+                if (c != ' ' && c != '(' && c != ')' && !char.IsDigit(c) && c!='+' && c!='-' && c!= '–' && c!= '*' && c != '/' && c != '.')
                 {
-                    
-                    return "Ошибка: " + c.ToString() + " на позиции " + i;
+                    error = true;
+                    return "Ошибка: " + c.ToString() + " на позиции " + (i+1)+"a";
                 }
             }
 
-
-            Dictionary<int, char> tmpMap = new Dictionary<int, char>();
-
-            for(int i=0;i<datalist.Count;i++)
+            for (int i = 0; i < datalist.Count; i++)
             {
                 char c = datalist[i];
+                if (c == '.')
+                {
+                    if(i==0 || i + 1 == datalist.Count)
+                    {
+                        error = true;
+                        return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + "b";
+                    }
+                    else
+                    {
+                        if((!char.IsDigit(datalist[i-1]))&& !char.IsDigit(datalist[i + 1]))
+                        {
+                            error = true;
+                            return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + "c";
+                        }
+                    }
+                }
 
-                if (c != ' ' && c != '(' && c != ')') tmpMap.Add(i, c);
             }
 
 
 
-            return "Pass";
+            char symbolBefore='0';
+            int lastNumberIndex = 0;
+            
+
+            //проверка на числа больше 9
+            for (int i = 0; i < datalist.Count; i++)
+            {
+                char c = datalist[i];
+                if(c == '+' || c == '*' || c == '/')
+                {
+                    if (symbolBefore == '+')
+                    {
+                        error = true;
+                        return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + "d";
+                    }
+                    else
+                    {
+                        symbolBefore = '+';
+                    }
+                }
+                else if(c == '-' || c == '–')
+                {
+                    symbolBefore = '+';
+                }
+                else if (char.IsDigit(c)||c=='.')
+                {
+                    if (symbolBefore == '1'&& lastNumberIndex <i-1)
+                    {
+                        error = true;
+                        return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + "f";
+                    }
+                    else
+                    {
+                        lastNumberIndex = i;
+                        symbolBefore = '1';
+                    }
+                }
+                
+
+
+            }
+
+
+
+                return "Pass";
         }
 
-        private static void TestForBrackets(List<char> datalist)
+        private static string TestForBrackets(List<char> datalist)
         {
 
 
-            List<char> brackets = new List<char>();
+            Stack<int> bracketIndex = new Stack<int>();
 
+            for(int i = 0; i < datalist.Count; i++)
+            {
+                char c = datalist[i];
+                if (c == '(')
+                {
+                    bracketIndex.Push(i);
+                }
+                else if (c == ')')
+                {
+                    if (bracketIndex.Count == 0)
+                    {
+                        error = true;
+                        return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + "g";
+                    }
+                    else
+                    {
+                        datalist[bracketIndex.Pop()] = '0';
+                        datalist[i] = '0';
+                    }
+                }
+            }
 
-
+            if (datalist.Contains('(') || datalist.Contains(')'))
+            {
+                for (int i = 0; i < datalist.Count; i++)
+                {
+                    char c = datalist[i];
+                    if (c == '(' || c == ')')
+                    {
+                        error = true;
+                        return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + "ll";
+                    }
+                }
+            }
             /*
              * 
              * Идем циклом через выражение, сохраняем индекс ( в стек
@@ -109,7 +218,7 @@ namespace Calc
 
 
 
-
+            return "Pass";
         }
 
         private static List<object> Parsing()
@@ -212,7 +321,7 @@ namespace Calc
                 else if (string.Equals(temp, "("))
                 {
                     stack.Push(temp);
-                    doubleBefore = false;
+                    
                 }
                 else if (string.Equals(temp, ")"))
                 {
@@ -229,7 +338,7 @@ namespace Calc
                             break;
                         }
                     }
-                    doubleBefore = false;
+                    
                 }
                 else if((string.Equals(temp, "-") || string.Equals(temp, "–")) && !doubleBefore)
                 {
@@ -306,6 +415,7 @@ namespace Calc
                 tmpList.Add(stack.Pop());
             }
 
+            
 
 
             foreach (var temp in tmpList)
@@ -344,9 +454,18 @@ namespace Calc
                                 res = first * second;
                                 break;
                             case "/":
-                                res = first / second;
-                                break;
 
+                                if (second != 0)
+                                {
+                                    res = first / second;
+                                    break;
+                                }
+                                else
+                                {
+                                    error = true;
+                                    return "Предотвращено деление на ноль";
+                                    
+                                }
 
                         }
 
