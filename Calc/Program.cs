@@ -9,7 +9,7 @@ namespace Calc
     class Program
     {
         
-        public static string input= "((10 - 15) / 5 + 3) - 1 ";
+        public static string input= "3846-2938+293/(1-1)*(39-1)";
 
         static string answer = "@";
 
@@ -65,12 +65,15 @@ namespace Calc
 
             result = TestForBrackets(datalist);
 
-            if(!error) result = TestForErrors(datalist);
+            datalist.Clear();
+            datalist.AddRange(input);
+
+            if (!error) result = TestForErrors(datalist);
 
             return result;
         }
 
-        private static string TestForErrors(List<char> datalist)
+        private static string TestForErrors(List<char> testData)
         {
             /*
 
@@ -83,32 +86,32 @@ namespace Calc
              проверка . на числа вокруг
              */
 
-            for (int i = 0; i < datalist.Count; i++)
+            for (int i = 0; i < testData.Count; i++)
             {
-                char c = datalist[i];
+                char c = testData[i];
                 if (c != ' ' && c != '(' && c != ')' && !char.IsDigit(c) && c!='+' && c!='-' && c!= '–' && c!= '*' && c != '/' && c != '.')
                 {
                     error = true;
-                    return "Ошибка: " + c.ToString() + " на позиции " + (i+1)+"a";
+                    return "Ошибка: " + c.ToString() + " на позиции " + (i+1)+" (неверный символ)";
                 }
             }
 
-            for (int i = 0; i < datalist.Count; i++)
+            for (int i = 0; i < testData.Count; i++)
             {
-                char c = datalist[i];
+                char c = testData[i];
                 if (c == '.')
                 {
-                    if(i==0 || i + 1 == datalist.Count)
+                    if(i==0 || i + 1 == testData.Count)
                     {
                         error = true;
-                        return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + "b";
+                        return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + " (неверное использование точки)";
                     }
                     else
                     {
-                        if((!char.IsDigit(datalist[i-1]))&& !char.IsDigit(datalist[i + 1]))
+                        if((!char.IsDigit(testData[i-1]))&& !char.IsDigit(testData[i + 1]))
                         {
                             error = true;
-                            return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + "c";
+                            return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + " (неверное использование точки)";
                         }
                     }
                 }
@@ -117,20 +120,20 @@ namespace Calc
 
 
 
-            char symbolBefore='0';
+            char symbolBefore='?';
             int lastNumberIndex = 0;
             
 
             //проверка на числа больше 9
-            for (int i = 0; i < datalist.Count; i++)
+            for (int i = 0; i < testData.Count; i++)
             {
-                char c = datalist[i];
+                char c = testData[i];
                 if(c == '+' || c == '*' || c == '/')
                 {
                     if (symbolBefore == '+')
                     {
                         error = true;
-                        return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + "d";
+                        return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + " (несколько знаков операций подряд)";
                     }
                     else
                     {
@@ -146,7 +149,7 @@ namespace Calc
                     if (symbolBefore == '1'&& lastNumberIndex <i-1)
                     {
                         error = true;
-                        return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + "f";
+                        return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + " (несколько чисел подряд)";
                     }
                     else
                     {
@@ -164,15 +167,15 @@ namespace Calc
                 return "Pass";
         }
 
-        private static string TestForBrackets(List<char> datalist)
+        private static string TestForBrackets(List<char> testData)
         {
 
 
             Stack<int> bracketIndex = new Stack<int>();
 
-            for(int i = 0; i < datalist.Count; i++)
+            for(int i = 0; i < testData.Count; i++)
             {
-                char c = datalist[i];
+                char c = testData[i];
                 if (c == '(')
                 {
                     bracketIndex.Push(i);
@@ -182,25 +185,25 @@ namespace Calc
                     if (bracketIndex.Count == 0)
                     {
                         error = true;
-                        return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + "g";
+                        return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + " (неверное использование скобок)";
                     }
                     else
                     {
-                        datalist[bracketIndex.Pop()] = '0';
-                        datalist[i] = '0';
+                        testData[bracketIndex.Pop()] = '0';
+                        testData[i] = '0';
                     }
                 }
             }
 
-            if (datalist.Contains('(') || datalist.Contains(')'))
+            if (testData.Contains('(') || testData.Contains(')'))
             {
-                for (int i = 0; i < datalist.Count; i++)
+                for (int i = 0; i < testData.Count; i++)
                 {
-                    char c = datalist[i];
+                    char c = testData[i];
                     if (c == '(' || c == ')')
                     {
                         error = true;
-                        return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + "ll";
+                        return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + " (неверное использование скобок)";
                     }
                 }
             }
