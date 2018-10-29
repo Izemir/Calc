@@ -9,7 +9,7 @@ namespace Calc
     class Program
     {
         
-        public static string input= "3846-2938+293/(1-1)*(39-1)";
+        public static string input= "-+2";
 
         static string answer = "@";
 
@@ -55,7 +55,9 @@ namespace Calc
             
         }
 
-
+        //тест на точки
+        //тест на ax
+        //тест на ( - номер скобочки в ошибке
         private static string Testing()
         {
             List<char> datalist = new List<char>();
@@ -106,14 +108,13 @@ namespace Calc
                         error = true;
                         return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + " (неверное использование точки)";
                     }
-                    else
-                    {
-                        if((!char.IsDigit(testData[i-1]))&& !char.IsDigit(testData[i + 1]))
+                    else if(!char.IsDigit(testData[i-1])|| !char.IsDigit(testData[i+1]))
                         {
                             error = true;
                             return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + " (неверное использование точки)";
                         }
-                    }
+                    
+                    
                 }
 
             }
@@ -121,10 +122,10 @@ namespace Calc
 
 
             char symbolBefore='?';
-            int lastNumberIndex = 0;
+            int lastNumberIndex = -1;
             
 
-            //проверка на числа больше 9
+            //
             for (int i = 0; i < testData.Count; i++)
             {
                 char c = testData[i];
@@ -162,6 +163,44 @@ namespace Calc
 
             }
 
+            lastNumberIndex = -1;
+            bool operationWithoutSecondNumber = false;
+            int operationIndex = -1;
+            char operation = '?';
+
+            //знак без числа впереди и после
+            for (int i = 0; i < testData.Count; i++)
+            {
+                char c = testData[i];
+                if (char.IsDigit(c))
+                {
+                    operationWithoutSecondNumber = false;
+                    lastNumberIndex = i;
+                }
+                
+                else if ((c == '+' || c == '*' || c == '/')&&lastNumberIndex==-1)
+                {
+                    error = true;
+                    return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + " (неверное использование знака операции)";
+                }
+                else if(c == '+' || c == '*' || c == '/' || c == '-' || c == '–')
+                {
+                    operationWithoutSecondNumber = true;
+                    operationIndex = i;
+                    operation = c;
+                }
+
+
+            }
+
+            if (operationWithoutSecondNumber)
+            {
+                error = true;
+                return "Ошибка: " + operation.ToString() + " на позиции " + (operationIndex + 1) + " (неверное использование знака операции)";
+            }
+
+            
+
 
 
                 return "Pass";
@@ -170,7 +209,8 @@ namespace Calc
         private static string TestForBrackets(List<char> testData)
         {
 
-
+            List<char> testData2 = testData.GetRange(0, testData.Count);
+            
             Stack<int> bracketIndex = new Stack<int>();
 
             for(int i = 0; i < testData.Count; i++)
@@ -207,21 +247,60 @@ namespace Calc
                     }
                 }
             }
-            /*
-             * 
-             * Идем циклом через выражение, сохраняем индекс ( в стек
-             * встречаем ) и меняем ( и ) на нули
-             * и удаляем индекс ( из стека
-             * 
-             * изначально индекс -1
-             * 
-             * считаем кол-во ( и )
-             * 
-             */
+
+            bool bracketBefore = false;
+            bool operBefore = false;
+            int index = -1;
+
+
+            for (int i = 0; i < testData2.Count; i++)
+            {
+                char c = testData2[i];
+
+                if (c == '(')
+                {
+                    bracketBefore = true;
+                    index = i;
+                }
+                else if((c == '+' || c == '*' || c == '/')&& bracketBefore)
+                {
+                        error = true;
+                        return "Ошибка: " + "(" + " на позиции " + (index + 1) + " (неверное использование скобок)";
+                                       
+                }
+                else if(c == '+' || c == '*' || c == '/' || c == '-' || c == '–')
+                {
+                    operBefore = true;
+                }
+                else if (char.IsDigit(c))
+                {
+                    bracketBefore = false;
+                }
+                else if((c==')' && bracketBefore)|| (c == ')' && operBefore))
+                {
+                    error = true;
+                    return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + " (неверное использование скобок)";
+                }
 
 
 
-            return "Pass";
+
+            }
+                /*
+                 * 
+                 * Идем циклом через выражение, сохраняем индекс ( в стек
+                 * встречаем ) и меняем ( и ) на нули
+                 * и удаляем индекс ( из стека
+                 * 
+                 * изначально индекс -1
+                 * 
+                 * считаем кол-во ( и )
+                 * 
+                 */
+
+
+
+                return "Pass";
         }
 
         private static List<object> Parsing()
@@ -361,7 +440,7 @@ namespace Calc
                         {
                             var temp2 = stack.Peek();
 
-                            if (string.Equals(temp2, "+") || string.Equals(temp2, "-") || string.Equals(temp, "–") || string.Equals(temp2, "*") || string.Equals(temp2, "/"))
+                            if (string.Equals(temp2, "+") || string.Equals(temp2, "-") || string.Equals(temp, "–") || string.Equals(temp2, "*") || string.Equals(temp2, "/") || string.Equals(temp2, "$"))
                             {
                                 tmpList.Add(stack.Pop());
                                 if (stack.Count == 0)
@@ -389,7 +468,7 @@ namespace Calc
                         {
                             var temp2 = stack.Peek();
 
-                            if (string.Equals(temp2, "*") || string.Equals(temp2, "/"))
+                            if (string.Equals(temp2, "*") || string.Equals(temp2, "/") || string.Equals(temp2, "$"))
                             {
                                 tmpList.Add(stack.Pop());
                                 if (stack.Count == 0)
@@ -418,8 +497,15 @@ namespace Calc
                 tmpList.Add(stack.Pop());
             }
 
-            
 
+            /*
+            foreach (var temp in tmpList)
+            {
+                Console.Write(temp.ToString()+",");
+                
+            }
+            Console.ReadKey();
+            */
 
             foreach (var temp in tmpList)
             {
