@@ -9,7 +9,7 @@ namespace Calc
     class Program
     {
         
-        public static string input= "-+2";
+        public static string input= "-2+3*2";
 
         static string answer = "@";
 
@@ -21,7 +21,7 @@ namespace Calc
         static void Main(string[] args)
         {
 
-            
+            Tester test = new Tester();
 
             string errorMessage = Testing();
 
