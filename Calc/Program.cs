@@ -21,20 +21,33 @@ namespace Calc
         static void Main(string[] args)
         {
 
+            List<char> datalist = new List<char>();
+            datalist.AddRange(input);
+
             Tester test = new Tester();
 
-            string errorMessage = Testing();
+            Parser parser = new Parser();
 
-            if (error)
+            Calculator calculator = new Calculator();
+
+            test.startTest(datalist);
+
+            //string errorMessage = Testing();
+
+            if (test.hasErrors())
             {
-                Console.WriteLine(errorMessage);
+                Console.WriteLine(test.getMessage());
                 Console.ReadKey();
             }
             else
             {
 
 
-                List<object> a = Parsing();
+                //List<object> a = Parsing();
+
+                parser.Parse(datalist);
+
+                List<object> a = parser.getParsedList();
 
                 /*
                 for (int i = 0; i < a.Count; i++)
@@ -43,12 +56,22 @@ namespace Calc
                 }
                 */
 
+                //calculator.calculate(a);
 
                 answer = Calculate(a);
 
-
-                Console.WriteLine(answer);
-                Console.ReadKey();
+                if(calculator.hasErrors())
+                {
+                    Console.WriteLine(calculator.getMessage());
+                    Console.ReadKey();
+                }
+                else
+                {
+                    Console.WriteLine(answer);
+                    //Console.WriteLine(calculator.getResult());
+                    Console.ReadKey();
+                }
+                
 
             }
 
