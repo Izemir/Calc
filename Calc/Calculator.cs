@@ -203,7 +203,7 @@ namespace Calc
                         }
                     }
 
-                    result = Convert.ToDouble(stack.Pop());
+                    
                 }
                 else break;
 
@@ -211,6 +211,7 @@ namespace Calc
                 
             
             }
+            result = Convert.ToDouble(stack.Pop());
 
         }
 

@@ -14,8 +14,7 @@ namespace Calc
         static string answer = "@";
 
         static bool error = false;
-
-        static string errorMessage = "";
+        
 
 
         static void Main(string[] args)
@@ -56,9 +55,9 @@ namespace Calc
                 }
                 */
 
-                //calculator.calculate(a);
+                calculator.calculate(a);
 
-                answer = Calculate(a);
+                //answer = Calculate(a);
 
                 if(calculator.hasErrors())
                 {
@@ -67,8 +66,8 @@ namespace Calc
                 }
                 else
                 {
-                    Console.WriteLine(answer);
-                    //Console.WriteLine(calculator.getResult());
+                    //Console.WriteLine(answer);
+                    Console.WriteLine(calculator.getResult());
                     Console.ReadKey();
                 }
                 

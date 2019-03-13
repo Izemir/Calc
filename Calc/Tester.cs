@@ -8,8 +8,7 @@ namespace Calc
         string errorMessage;
 
         bool error;
-
-        
+               
 
         public Tester()
         {
