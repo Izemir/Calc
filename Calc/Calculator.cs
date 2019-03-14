@@ -4,14 +4,18 @@ using System.Collections.Generic;
 
 namespace Calc
 {
+
+    /// 
+    /// Считает результат выражения
+    /// 
     class Calculator
     {
 
-        double result;
+        double result; // результат
 
-        string errorMessage;
+        string errorMessage;  // сообщение ошибки
 
-        bool error;
+        bool error; // сообщение о том, есть ли ошибка
 
         public Calculator() {
             result = 0;
@@ -19,19 +23,22 @@ namespace Calc
             errorMessage = "Pass";
                     }
 
-        
-        public void calculate(List<object> a)
+
+        // Для подсчета используется Обратная польская запись, 
+        // алгоритм записи и расчета подробно описан здесь https://ru.wikipedia.org/wiki/Обратная_польская_запись
+        //
+        public void calculate(List<object> datalist)
         {
             
-
             Stack<object> stack = new Stack<object>();
             List<object> tmpList = new List<object>();
 
             bool doubleBefore = false;
 
-            for (int i = 0; i < a.Count; i++)
+            // Преобразование выражения в обратную польскую запись
+            for (int i = 0; i < datalist.Count; i++)
             {
-                var temp = a[i];
+                var temp = datalist[i];
                 if (temp.GetType() == typeof(double))
                 {
                     tmpList.Add(temp);
@@ -129,21 +136,13 @@ namespace Calc
 
             }
 
+            // Очистка стека, копирование стека в новое выражение
             while (stack.Count > 0)
             {
                 tmpList.Add(stack.Pop());
             }
 
-
-            /*
-            foreach (var temp in tmpList)
-            {
-                Console.Write(temp.ToString()+",");
-                
-            }
-            Console.ReadKey();
-            */
-
+            // Расчет выражения, последнее оставшееся число в стеке и есть результат           
             foreach (var temp in tmpList)
             {
                 if (!error)
@@ -211,14 +210,19 @@ namespace Calc
                 
             
             }
+
+
             result = Convert.ToDouble(stack.Pop());
 
         }
 
+        // Возвращает сообщение ошибки
         public string getMessage() { return errorMessage; }
 
+        // Возвращает значение переменной, описывающей, была ли ошибка
         public bool hasErrors() { return error; }
 
+        // Возвращает результат расчета
         public string getResult()
         {
             return result.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);

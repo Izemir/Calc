@@ -9,7 +9,7 @@ namespace Calc
     class Program
     {
         
-        public static string input= "-2+3*2";
+        public static string input= "-2+12";
 
         static string answer = "@";
 
@@ -44,7 +44,7 @@ namespace Calc
 
                 //List<object> a = Parsing();
 
-                parser.Parse(datalist);
+                parser.parse(datalist);
 
                 List<object> a = parser.getParsedList();
 
@@ -77,6 +77,7 @@ namespace Calc
             
         }
 
+        /*
         //тест на точки
         //тест на ax
         //тест на ( - номер скобочки в ошибке
@@ -108,7 +109,7 @@ namespace Calc
              как то встроить проверку на числа подряд и знаки подряд(и исключение унарный минус)
 
              проверка . на числа вокруг
-             */
+             
 
             for (int i = 0; i < testData.Count; i++)
             {
@@ -318,7 +319,7 @@ namespace Calc
                  * 
                  * считаем кол-во ( и )
                  * 
-                 */
+                 *
 
 
 
@@ -527,7 +528,7 @@ namespace Calc
                 
             }
             Console.ReadKey();
-            */
+            *
 
             foreach (var temp in tmpList)
             {
@@ -597,6 +598,7 @@ namespace Calc
         {
             return ((c >= '0') && (c <= '9'));
         }
+        */
     }
 
 }

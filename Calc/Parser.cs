@@ -6,25 +6,31 @@ using System.Threading.Tasks;
 
 namespace Calc
 {
+
+    /// 
+    /// Распознает числа, переводит выражение в более удобное для последующих расчетов
+    ///
     class Parser
     {
-        List<object> parsedList;
+        List<object> parsedList; // результат парсинга
 
         public Parser() { }
 
-        public void Parse(List<char> datalist)
+        public void parse(List<char> datalist)
         {
-            List<object> result = new List<object>();
+            List<object> result = new List<object>(); // полученное выражение
 
-            bool readingNumber = false;
+            bool readingNumber = false; // определяет, идет ли в данный момент чтение цифр
 
-            List<char> number = new List<char>();
+            List<char> number = new List<char>(); // лист цифр, позднее объединямых в число
 
+
+            /* Проходит через входную строку, цифры, идущие подряд, объединяет в числа,
+             * также распознает числа с точкой.
+             */
             for (int i = 0; i < datalist.Count; i++)
             {
-
-                //if (datalist[i] == ' ') continue;
-
+                                
                 if (char.IsDigit(datalist[i]))
                 {
 
@@ -74,7 +80,7 @@ namespace Calc
             parsedList= result;
         }
 
-
+        // Возвращает результат парсинга
         public List<object> getParsedList()
         {
             return parsedList;

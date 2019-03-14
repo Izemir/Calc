@@ -3,11 +3,17 @@ using System.Collections.Generic;
 
 namespace Calc
 {
+
+
+
+    /// 
+    /// Тестирует введенную строку на разрешенные знаки и верное их использование
+    /// 
     public class Tester
     {
-        string errorMessage;
+        string errorMessage;  //сообщение ошибки
 
-        bool error;
+        bool error; //сообщение о том, есть ли ошибка
                
 
         public Tester()
@@ -18,18 +24,29 @@ namespace Calc
         
     }
 
-
+        // Возвращает сообщение ошибки
         public string getMessage() { return errorMessage; }
 
+        // Возвращает значение переменной, описывающей, была ли ошибка
         public bool hasErrors() { return error; }
 
+        /* Запускает несколько тестов:
+        *   тест на пустое выражение
+        *   тест на разрешенные символы;
+        *   тест на использование скобок;
+        *   тест на использование разрешенных символов.      
+        */
         public void startTest(List<char> datalist)
         {
+
+
             List<char> tmpDatalist = new List<char>();
 
             tmpDatalist.AddRange(datalist);
 
-            errorMessage = basicTest(tmpDatalist);
+            errorMessage = emptyTest(tmpDatalist);
+
+            if (!error) errorMessage = basicTest(tmpDatalist);
 
             if (!error) errorMessage = bracketsTest(tmpDatalist);
 
@@ -44,6 +61,32 @@ namespace Calc
             }
         }
 
+        // Тест на пустую входную строку
+        private string emptyTest(List<char> datalist)
+        {
+            List<char> testData = datalist.GetRange(0, datalist.Count);
+
+
+            testData.RemoveAll(spaceChar);
+
+            if (testData.Count == 0)
+            {
+                error = true;
+                return "Ошибка: пустая входная строка.";
+            }
+
+            
+
+            return "Pass";
+        }
+
+        // Предикат для теста на пустое выражение
+        private bool spaceChar(char c)
+        {
+            return c == ' ';
+        }
+
+        // Тест на разрешенные символы (скобки, знаки операций, цифры,пробелы и точки)
         private string basicTest(List<char> testData)
         {
             for (int i = 0; i < testData.Count; i++)
@@ -59,12 +102,18 @@ namespace Calc
             return "Pass";
         }
 
-        private string bracketsTest(List<char> tmpDatalist)
+
+        // Тест на верное использование скобок
+        private string bracketsTest(List<char> datalist)
         {
-            List<char> testData = tmpDatalist.GetRange(0, tmpDatalist.Count);
+            List<char> testData = datalist.GetRange(0, datalist.Count);
 
             Stack<int> bracketIndex = new Stack<int>();
 
+
+            // Проходит через выражение, запоминает все '(',
+            // если встречает ')', то удаляет из стека последнюю запись о '('
+            // Также заменяет пары '(' и ')' на нули
             for (int i = 0; i < testData.Count; i++)
             {
                 char c = testData[i];
@@ -87,6 +136,7 @@ namespace Calc
                 }
             }
 
+            // Проверяет, остались ли после первого теста скобки в выражении 
             if (testData.Contains('(') || testData.Contains(')'))
             {
                 for (int i = 0; i < testData.Count; i++)
@@ -100,14 +150,15 @@ namespace Calc
                 }
             }
 
-            bool bracketBefore = false;
-            bool operBefore = false;
+            bool bracketBefore = false; // была ли скобка до [текущего символа]
+            bool operBefore = false; // была ли операция до [текущего символа]
             int index = -1;
 
             testData.Clear();
-            testData = tmpDatalist.GetRange(0, tmpDatalist.Count);
+            testData = datalist.GetRange(0, datalist.Count);
 
 
+            // Проверяет на ошибочное использование скобок, например 2(+2)
             for (int i = 0; i < testData.Count; i++)
             {
                 char c = testData[i];
@@ -145,40 +196,21 @@ namespace Calc
             return "Pass";
         }
 
-        private string errorTest(List<char> tmpDatalist)
+        // Проверка на верное использование разрешенных знаков
+        private string errorTest(List<char> datalist)
         {
-            /*
-
-             проверяем /0 или / 0
-             проверяем на числа
-             и в том же цикле проверяем на +-.. и ( и .
-
-             как то встроить проверку на числа подряд и знаки подряд(и исключение унарный минус)
-
-             проверка . на числа вокруг
-             */
-
-            for (int i = 0; i < tmpDatalist.Count; i++)
+            // использование точки, определяется, стоят ли рядом цифры
+            for (int i = 0; i < datalist.Count; i++)
             {
-                char c = tmpDatalist[i];
-                if (c != ' ' && c != '(' && c != ')' && !char.IsDigit(c) && c != '+' && c != '-' && c != '–' && c != '*' && c != '/' && c != '.')
-                {
-                    error = true;
-                    return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + " (неверный символ)";
-                }
-            }
-
-            for (int i = 0; i < tmpDatalist.Count; i++)
-            {
-                char c = tmpDatalist[i];
+                char c = datalist[i];
                 if (c == '.')
                 {
-                    if (i == 0 || i + 1 == tmpDatalist.Count)
+                    if (i == 0 || i + 1 == datalist.Count)
                     {
                         error = true;
                         return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + " (неверное использование точки)";
                     }
-                    else if (!char.IsDigit(tmpDatalist[i - 1]) || !char.IsDigit(tmpDatalist[i + 1]))
+                    else if (!char.IsDigit(datalist[i - 1]) || !char.IsDigit(datalist[i + 1]))
                     {
                         error = true;
                         return "Ошибка: " + c.ToString() + " на позиции " + (i + 1) + " (неверное использование точки)";
@@ -195,10 +227,10 @@ namespace Calc
             int lastNumberIndex = -1;
 
 
-            //
-            for (int i = 0; i < tmpDatalist.Count; i++)
+            // использование знаков операции или чисел подряд
+            for (int i = 0; i < datalist.Count; i++)
             {
-                char c = tmpDatalist[i];
+                char c = datalist[i];
                 if (c == '+' || c == '*' || c == '/')
                 {
                     if (symbolBefore == '+')
@@ -238,10 +270,10 @@ namespace Calc
             int operationIndex = -1;
             char operation = '?';
 
-            //знак без числа впереди и после
-            for (int i = 0; i < tmpDatalist.Count; i++)
+            // определяется, есть ли числа до и после знака
+            for (int i = 0; i < datalist.Count; i++)
             {
-                char c = tmpDatalist[i];
+                char c = datalist[i];
                 if (char.IsDigit(c))
                 {
                     operationWithoutSecondNumber = false;

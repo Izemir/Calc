@@ -12,3 +12,10 @@ C:\Users\PC21\Desktop\Бро\Calc\obj\Debug\Calc.csprojAssemblyReference.cache
 C:\Users\PC21\Desktop\Бро\Calc\obj\Debug\Calc.csproj.CoreCompileInputs.cache
 C:\Users\PC21\Desktop\Бро\Calc\obj\Debug\Calc.exe
 C:\Users\PC21\Desktop\Бро\Calc\obj\Debug\Calc.pdb
+C:\Users\PC21\Desktop\Бро\Calc\Calc\bin\Debug\Calc.exe.config
+C:\Users\PC21\Desktop\Бро\Calc\Calc\bin\Debug\Calc.exe
+C:\Users\PC21\Desktop\Бро\Calc\Calc\bin\Debug\Calc.pdb
+C:\Users\PC21\Desktop\Бро\Calc\Calc\obj\Debug\Calc.csprojAssemblyReference.cache
+C:\Users\PC21\Desktop\Бро\Calc\Calc\obj\Debug\Calc.csproj.CoreCompileInputs.cache
+C:\Users\PC21\Desktop\Бро\Calc\Calc\obj\Debug\Calc.exe
+C:\Users\PC21\Desktop\Бро\Calc\Calc\obj\Debug\Calc.pdb
