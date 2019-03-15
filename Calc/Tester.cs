@@ -104,9 +104,9 @@ namespace Calc
 
 
         // Тест на верное использование скобок
-        private string bracketsTest(List<char> datalist)
+        private string bracketsTest(List<char> dataList)
         {
-            List<char> testData = datalist.GetRange(0, datalist.Count);
+            List<char> testData = dataList.GetRange(0, dataList.Count);
 
             Stack<int> bracketIndex = new Stack<int>();
 
@@ -114,9 +114,9 @@ namespace Calc
             // Проходит через выражение, запоминает все '(',
             // если встречает ')', то удаляет из стека последнюю запись о '('
             // Также заменяет пары '(' и ')' на нули
-            for (int i = 0; i < testData.Count; i++)
+            for (int i = 0; i < dataList.Count; i++)
             {
-                char c = testData[i];
+                char c = dataList[i];
                 if (c == '(')
                 {
                     bracketIndex.Push(i);
@@ -130,18 +130,18 @@ namespace Calc
                     }
                     else
                     {
-                        testData[bracketIndex.Pop()] = '0';
-                        testData[i] = '0';
+                        dataList[bracketIndex.Pop()] = '0';
+                        dataList[i] = '0';
                     }
                 }
             }
 
             // Проверяет, остались ли после первого теста скобки в выражении 
-            if (testData.Contains('(') || testData.Contains(')'))
+            if (dataList.Contains('(') || dataList.Contains(')'))
             {
-                for (int i = 0; i < testData.Count; i++)
+                for (int i = 0; i < dataList.Count; i++)
                 {
-                    char c = testData[i];
+                    char c = dataList[i];
                     if (c == '(' || c == ')')
                     {
                         error = true;
@@ -154,10 +154,7 @@ namespace Calc
             bool operBefore = false; // была ли операция до [текущего символа]
             int index = -1;
 
-            testData.Clear();
-            testData = datalist.GetRange(0, datalist.Count);
-
-
+            
             // Проверяет на ошибочное использование скобок, например 2(+2)
             for (int i = 0; i < testData.Count; i++)
             {
@@ -181,6 +178,7 @@ namespace Calc
                 else if (char.IsDigit(c))
                 {
                     bracketBefore = false;
+                    operBefore = false;
                 }
                 else if ((c == ')' && bracketBefore) || (c == ')' && operBefore))
                 {
@@ -192,7 +190,7 @@ namespace Calc
 
 
             }
-           
+
             return "Pass";
         }
 
